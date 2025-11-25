@@ -33,9 +33,10 @@
                📅 Book Court
             </a>
 
-            <a href="#"
-               class="flex items-center gap-3 px-4 py-3 rounded-lg font-medium hover:bg-gray-100">
-               📊 Transaksi & History
+            <a href="{{ route('admin.transaksi') }}"
+                class="flex items-center gap-3 px-4 py-3 rounded-lg font-medium 
+                {{ request()->is('admin/transaksi') ? 'bg-yellow-400 text-white' : 'hover:bg-gray-100' }}">
+                📊 Transaksi & History
             </a>
 
             <form method="POST" action="{{ route('logout') }}">

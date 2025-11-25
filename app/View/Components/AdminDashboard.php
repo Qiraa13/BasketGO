@@ -1,13 +1,11 @@
-<?php
-
 namespace App\View\Components;
 
 use Illuminate\View\Component;
 
-class DashboardLayout extends Component
+class AdminDashboard extends Component
 {
     public function render()
     {
-        return view('layouts.dashboard-layout');
+        return view('layouts.admin-dashboard');
     }
 }
