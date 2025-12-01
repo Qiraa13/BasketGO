@@ -32,6 +32,21 @@
           <span>📊</span><span>Status & History</span>
         </a>
 
+        <form method="POST" action="{{ route('account.delete') }}"
+      onsubmit="return confirm('Yakin ingin menghapus akun secara permanen?')">
+    @csrf
+    @method('DELETE')
+
+    <button type="submit"
+            class="w-full text-left flex items-center gap-3 px-4 py-3 rounded-lg font-semibold 
+                   text-red-600 bg-gradient-to-r from-red-50 to-red-100 hover:from-red-100 hover:to-red-200 
+                   transition-all">
+        <span>🔥</span>
+        <span>Hapus Akun</span>
+    </button>
+</form>
+
+
         <form method="POST" action="{{ route('logout') }}">
           @csrf
           <button type="submit" class="w-full text-left flex items-center gap-3 px-4 py-3 rounded-lg font-medium hover:bg-gray-100">

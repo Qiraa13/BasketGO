@@ -9,10 +9,14 @@ use App\Http\Controllers\AdminHistoryController;
 
 // Arahkan root berdasarkan role / login
 Route::get('/', function () {
-    return auth()->check()
-        ? redirect('/dashboard')
-        : redirect('/login');
-});
+
+    if (auth()->check()) {
+        return redirect()->route('dashboard');
+    }
+
+    return view('landing');
+})->name('landing');
+
 
 // Dashboard User
 Route::middleware(['auth','verified'])->group(function () {
@@ -20,9 +24,9 @@ Route::middleware(['auth','verified'])->group(function () {
 });
 
 // Hapus akun user
-Route::delete('/user/delete', [UserAccountController::class, 'destroy'])
-        ->middleware(['auth'])
-        ->name('user.destroy');
+Route::delete('/delete-account', [UserAccountController::class, 'destroy'])
+     ->name('account.delete');
+
 
 // User profile
 Route::middleware('auth')->group(function () {
@@ -41,6 +45,10 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
     Route::get('/dashboard', function () {
         return view('admin.dashboard');
     })->name('admin.dashboard');
+
+ Route::get('/book-court', function () {
+    return view('admin.book-court');
+})->name('admin.bookcourt');
 
     // Riwayat Transaksi (pakai controller)
     Route::get('/transaksi', [\App\Http\Controllers\AdminTransaksiController::class, 'index'])

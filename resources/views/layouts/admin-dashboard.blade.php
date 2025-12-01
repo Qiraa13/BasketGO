@@ -28,15 +28,23 @@
                🏠 Dashboard
             </a>
 
-            <a href="#"
-               class="flex items-center gap-3 px-4 py-3 rounded-lg font-medium hover:bg-gray-100">
-               📅 Book Court
+            <a href="{{ route('admin.bookcourt') }}"
+               class="flex items-center gap-3 px-4 py-3 rounded-lg font-medium 
+               {{ request()->is('admin/book-court') ? 'bg-yellow-400 text-white' : 'hover:bg-gray-100' }}">
+               <span class="flex items-center justify-center w-5 h-5 text-lg">📅</span>
+               <span>Book Court</span>
             </a>
 
             <a href="{{ route('admin.transaksi') }}"
-                class="flex items-center gap-3 px-4 py-3 rounded-lg font-medium 
-                {{ request()->is('admin/transaksi') ? 'bg-yellow-400 text-white' : 'hover:bg-gray-100' }}">
-                📊 Transaksi & History
+               class="flex items-center gap-3 px-4 py-3 rounded-lg font-medium
+               {{
+                   request()->is('admin/transaksi*') ||
+                   request()->is('admin/booking*') ||
+                   request()->is('admin/lapangan*')
+                   ? 'bg-yellow-400 text-white'
+                   : 'hover:bg-gray-100'
+               }}">
+               📊 Transaksi & History
             </a>
 
             <form method="POST" action="{{ route('logout') }}">
@@ -51,7 +59,7 @@
 
     <!-- MAIN CONTENT -->
     <main class="flex-1 p-10">
-        {{ $slot }}
+        @yield('content')
     </main>
 
 </div>

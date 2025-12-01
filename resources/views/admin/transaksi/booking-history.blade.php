@@ -43,15 +43,23 @@
         </div>
 
     </div>
+{{-- TAB --}}
+<div class="flex gap-6 border-b pb-2 mb-4">
+    <a href="{{ route('admin.transaksi') }}" 
+       class="text-gray-600">
+       Riwayat Transaksi
+    </a>
 
-    {{-- TAB --}}
-    <div class="flex gap-6 border-b pb-3 mb-6 text-sm font-medium">
-        <a href="{{ route('admin.transaksi') }}" class="text-gray-600 hover:text-yellow-500">Riwayat Transaksi</a>
-        <a href="{{ route('admin.history.booking') }}" class="text-yellow-500 border-b-2 border-yellow-500 pb-2">
-            Booking History
-        </a>
-        <a href="{{ route('admin.lapangan.jadwal') }}" class="text-gray-600 hover:text-yellow-500">Jadwal History</a>
-    </div>
+    <a href="{{ route('admin.history.booking') }}" 
+       class="text-yellow-500 border-b-2 border-yellow-500 pb-2 font-semibold">
+       Booking History
+    </a>
+
+    <a href="{{ route('admin.lapangan.jadwal') }}" 
+       class="text-gray-600">
+       Jadwal History
+    </a>
+</div>
 
     {{-- CARD ATAS --}}
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">

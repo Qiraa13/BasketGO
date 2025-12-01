@@ -8,13 +8,14 @@ use Illuminate\Support\Facades\Auth;
 class UserAccountController extends Controller
 {
     public function destroy(Request $request)
-    {
-        $user = Auth::user();
+{
+    $user = $request->user();
 
-        Auth::logout(); // keluar dulu
+    auth()->logout();
 
-        $user->delete(); // hapus data user dari PostgreSQL
+    $user->delete();
 
-        return redirect('/register')->with('success', 'Akun berhasil dihapus.');
-    }
+    return redirect('/')->with('success', 'Akun berhasil dihapus.');
+}
+
 }

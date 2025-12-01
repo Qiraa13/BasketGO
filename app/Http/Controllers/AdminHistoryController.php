@@ -15,7 +15,7 @@ class AdminHistoryController extends Controller
             ->orderBy('id')
             ->get();
 
-        return view('admin.booking-history', [
+        return view('admin.transaksi.booking-history', [
             'lapangan' => $lapangan
         ]);
     }
@@ -26,7 +26,7 @@ class AdminHistoryController extends Controller
             ->orderBy('tanggal', 'desc')
             ->get();
 
-        return view('admin.lapangan-jadwal', [
+        return view('admin.transaksi.lapangan-jadwal', [
             'jadwal' => $jadwal
         ]);
     }
@@ -34,7 +34,9 @@ class AdminHistoryController extends Controller
     public function createJadwal()
     {
         $lapangans = Lapangan::all();
-        return view('admin.lapangan-jadwal-create', compact('lapangans'));
+        return view('admin.transaksi.lapangan-jadwal-create', [
+            'lapangans' => $lapangans
+        ]);
     }
 
     public function storeJadwal(Request $request)
@@ -48,13 +50,18 @@ class AdminHistoryController extends Controller
 
         Jadwal::create($validated);
 
-        return redirect()->route('admin.lapangan.jadwal')->with('success', 'Jadwal berhasil ditambahkan.');
+        return redirect()->route('admin.lapangan.jadwal')
+            ->with('success', 'Jadwal berhasil ditambahkan.');
     }
 
     public function editJadwal(Jadwal $jadwal)
     {
         $lapangans = Lapangan::all();
-        return view('admin.lapangan-jadwal-edit', compact('jadwal', 'lapangans'));
+        
+        return view('admin.transaksi.lapangan-jadwal-edit', [
+            'jadwal' => $jadwal,
+            'lapangans' => $lapangans
+        ]);
     }
 
     public function updateJadwal(Request $request, Jadwal $jadwal)
@@ -68,13 +75,15 @@ class AdminHistoryController extends Controller
 
         $jadwal->update($validated);
 
-        return redirect()->route('admin.lapangan.jadwal')->with('success', 'Jadwal berhasil diperbarui.');
+        return redirect()->route('admin.lapangan.jadwal')
+            ->with('success', 'Jadwal berhasil diperbarui.');
     }
 
     public function destroyJadwal(Jadwal $jadwal)
     {
         $jadwal->delete();
 
-        return redirect()->route('admin.lapangan.jadwal')->with('success', 'Jadwal berhasil dihapus.');
+        return redirect()->route('admin.lapangan.jadwal')
+            ->with('success', 'Jadwal berhasil dihapus.');
     }
 }

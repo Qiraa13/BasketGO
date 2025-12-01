@@ -10,12 +10,12 @@ class AdminLapanganController extends Controller
     public function index()
     {
         $lapangans = Lapangan::orderBy('id')->get();
-        return view('admin.lapangan-index', compact('lapangans'));
+        return view('admin.transaksi.lapangan-index', compact('lapangans'));
     }
 
     public function create()
     {
-        return view('admin.lapangan-create');
+        return view('admin.transaksi.lapangan-create');
     }
 
     public function store(Request $request)
@@ -28,12 +28,13 @@ class AdminLapanganController extends Controller
 
         Lapangan::create($validated);
 
-        return redirect()->route('admin.lapangan.index')->with('success', 'Lapangan berhasil ditambahkan.');
+        return redirect()->route('admin.lapangan.index')
+            ->with('success', 'Lapangan berhasil ditambahkan.');
     }
 
     public function edit(Lapangan $lapangan)
     {
-        return view('admin.lapangan-edit', compact('lapangan'));
+        return view('admin.transaksi.lapangan-edit', compact('lapangan'));
     }
 
     public function update(Request $request, Lapangan $lapangan)
@@ -46,13 +47,15 @@ class AdminLapanganController extends Controller
 
         $lapangan->update($validated);
 
-        return redirect()->route('admin.lapangan.index')->with('success', 'Lapangan berhasil diperbarui.');
+        return redirect()->route('admin.lapangan.index')
+            ->with('success', 'Lapangan berhasil diperbarui.');
     }
 
     public function destroy(Lapangan $lapangan)
     {
         $lapangan->delete();
 
-        return redirect()->route('admin.lapangan.index')->with('success', 'Lapangan berhasil dihapus.');
+        return redirect()->route('admin.lapangan.index')
+            ->with('success', 'Lapangan berhasil dihapus.');
     }
 }
