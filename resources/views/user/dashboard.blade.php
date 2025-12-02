@@ -1,78 +1,96 @@
-<x-dashboard-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            Dashboard
-        </h2>
-    </x-slot>
+@extends('layouts.user-dashboard')
 
-    <div class="py-8">
-        <div class="max-w-7xl mx-auto px-4">
 
-            <!-- Greeting + Stats -->
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-
-                <!-- Total Bookings -->
-                <div class="bg-white p-6 rounded-xl shadow-md">
-                    <h3 class="text-gray-500 text-sm">Total Bookings</h3>
-                    <p class="text-3xl font-bold mt-2">{{ $totalBookings }}</p>
-                </div>
-
-                <!-- Upcoming -->
-                <div class="bg-white p-6 rounded-xl shadow-md">
-                    <h3 class="text-gray-500 text-sm">Upcoming Bookings</h3>
-                    <p class="text-3xl font-bold mt-2">{{ $upcomingBookings->count() }}</p>
-                </div>
-
-                <!-- Pending Payment -->
-                <div class="bg-white p-6 rounded-xl shadow-md">
-                    <h3 class="text-gray-500 text-sm">Pending Payment</h3>
-                    <p class="text-3xl font-bold mt-2">{{ $pendingPayment }}</p>
-                </div>
-
-                <!-- Total Spent -->
-                <div class="bg-white p-6 rounded-xl shadow-md">
-                    <h3 class="text-gray-500 text-sm">Total Spent</h3>
-                    <p class="text-3xl font-bold mt-2">Rp {{ number_format($totalSpent, 0, ',', '.') }}</p>
-                </div>
-            </div>
-
-            <!-- Upcoming Booking Section -->
-            <div class="bg-white p-6 rounded-xl shadow-md mb-8">
-                <h3 class="text-lg font-semibold mb-4">Upcoming Bookings</h3>
-
-                @if($upcomingBookings->count() == 0)
-                    <p class="text-gray-500">Tidak ada booking mendatang.</p>
-                @else
-                    <div class="space-y-4">
-                        @foreach ($upcomingBookings as $book)
-                            <div class="border p-4 rounded-lg flex justify-between items-center">
-                                <div>
-                                    <p class="font-semibold">{{ $book->lapangan->nama }}</p>
-                                    <p class="text-gray-600 text-sm">
-                                        {{ \Carbon\Carbon::parse($book->jadwal->tanggal)->format('d M Y') }}
-                                        • {{ substr($book->jadwal->jam_mulai,0,5) }} - {{ substr($book->jadwal->jam_selesai,0,5) }}
-                                    </p>
-                                </div>
-
-                                <span class="px-4 py-1 rounded-full text-white 
-                                    @if($book->status === 'pending') bg-yellow-500 
-                                    @elseif($book->status === 'diterima') bg-green-600 
-                                    @else bg-red-600 @endif">
-                                    {{ ucfirst($book->status) }}
-                                </span>
-                            </div>
-                        @endforeach
-                    </div>
-                @endif
-            </div>
-
-            <!-- Activity / History -->
-            <div class="bg-white p-6 rounded-xl shadow-md">
-                <h3 class="text-lg font-semibold mb-4">Recent Activity</h3>
-
-                <p class="text-gray-500">Fitur ini bisa diisi dengan riwayat booking / pembayaran terbaru.</p>
-            </div>
-
-        </div>
+@section('content')
+<div class="p-6 space-y-8">
+<div class="bg-white p-6 rounded-lg shadow">
+    {{-- Greeting --}}
+    <div>
+        <h1 class="text-2xl font-bold">Selamat Datang, {{ Auth::user()->name }}!</h1>
+        <p class="text-gray-500">Siap untuk permainan Anda berikutnya?</p>
     </div>
-</x-dashboard-layout>
+</div>
+
+    {{-- Stats Cards --}}
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+
+        <div class="bg-white p-5 rounded-xl shadow">
+            <p class="text-gray-500 text-sm">Total Bookings</p>
+            <h2 class="text-3xl font-bold">{{ $totalBookings ?? 0 }}</h2>
+            <p class="text-green-500 text-xs mt-1">↑ 12% dari bulan lalu</p>
+        </div>
+
+        <div class="bg-white p-5 rounded-xl shadow">
+            <p class="text-gray-500 text-sm">Pemesanan Mendatang</p>
+            <h2 class="text-3xl font-bold">{{ $upcoming ?? 0 }}</h2>
+            <p class="text-blue-500 text-xs mt-1">Berikutnya: Besok 2PM</p>
+        </div>
+
+        <div class="bg-white p-5 rounded-xl shadow">
+            <p class="text-gray-500 text-sm">Pembayaran Tertunda</p>
+            <h2 class="text-3xl font-bold">{{ $pending ?? 0 }}</h2>
+            <p class="text-yellow-500 text-xs mt-1">Rp 200.000</p>
+        </div>
+
+        <div class="bg-white p-5 rounded-xl shadow">
+            <p class="text-gray-500 text-sm">Total Spent</p>
+            <h2 class="text-3xl font-bold">Rp {{ number_format($totalSpent ?? 0, 0, ',', '.') }}</h2>
+            <p class="text-green-500 text-xs mt-1">Tahun ini</p>
+        </div>
+
+    </div>
+
+    {{-- Bookings List --}}
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+        {{-- Pemesanan Mendatang --}}
+        <div class="bg-white p-6 rounded-xl shadow col-span-2">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="font-semibold text-lg">Pemesanan Mendatang</h2>
+                <a href="#" class="text-red-500 text-sm">Lihat Semua</a>
+            </div>
+
+            @forelse ($upcomingBookings ?? [] as $book)
+                <div class="flex items-center justify-between p-4 border rounded-lg mb-3">
+                    <div>
+                        <h3 class="font-semibold">{{ $book->court_name }}</h3>
+                        <p class="text-xs text-gray-500">{{ $book->date }}</p>
+                    </div>
+                    <div class="text-right">
+                        <p class="font-semibold">{{ $book->time }}</p>
+                        <p class="text-green-500 text-xs">Dikonfirmasi</p>
+                    </div>
+                </div>
+            @empty
+                <p class="text-gray-400 text-sm">Belum ada pemesanan.</p>
+            @endforelse
+        </div>
+
+        {{-- Aktivitas Terbaru --}}
+        <div class="bg-white p-6 rounded-xl shadow">
+            <h2 class="font-semibold text-lg mb-4">Aktivitas Terkini</h2>
+
+            <ul class="space-y-3">
+                <li class="flex gap-2 items-center">
+                    <span class="w-3 h-3 bg-green-500 rounded-full"></span>
+                    <p class="text-sm">Pemesanan dikonfirmasi untuk Court A</p>
+                </li>
+
+                <li class="flex gap-2 items-center">
+                    <span class="w-3 h-3 bg-orange-500 rounded-full"></span>
+                    <p class="text-sm">Pembayaran diterima Rp 200.000</p>
+                </li>
+
+                <li class="flex gap-2 items-center">
+                    <span class="w-3 h-3 bg-blue-500 rounded-full"></span>
+                    <p class="text-sm">Permintaan pemesanan baru</p>
+                </li>
+            </ul>
+        </div>
+
+
+    </div>
+
+</div>
+
+@endsection
