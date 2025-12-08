@@ -39,9 +39,27 @@
             {{-- Notifikasi --}}
             <button class="text-xl hover:text-orange-500">🔔</button>
 
-            {{-- Avatar --}}
-            <img src="https://ui-avatars.com/api/?name={{ Auth::user()->name }}"
-                class="w-10 h-10 rounded-full border border-gray-300 shadow-sm">
+            {{-- Avatar with Dropdown --}}
+<div x-data="{ openProfile: false }" class="relative">
+    <button @click="openProfile = !openProfile">
+        <img src="https://ui-avatars.com/api/?name={{ Auth::user()->name }}"
+            class="w-10 h-10 rounded-full border border-gray-300 shadow-sm cursor-pointer">
+    </button>
+
+    <!-- DROPDOWN MENU -->
+    <div x-show="openProfile"
+         @click.away="openProfile = false"
+         x-transition
+         class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-50">
+
+        <a href="{{ route('profile.edit') }}"
+           class="block px-4 py-2 text-sm hover:bg-gray-100">
+           Profil Saya
+        </a>
+
+    </div>
+</div>
+
         </div>
 
     </div> {{-- END flex justify-between --}}

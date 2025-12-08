@@ -49,7 +49,7 @@
            : 'hover:bg-gray-100'
        }}">
        <span class="w-5 text-lg">📊</span>
-       <span>Transaksi & History</span>
+       <span>Jadwal & Transaksi</span>
     </a>
 
     {{-- LOGOUT --}}

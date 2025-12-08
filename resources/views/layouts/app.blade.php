@@ -16,6 +16,7 @@
     </head>
     <body class="font-sans antialiased">
         <div class="min-h-screen bg-gray-100">
+
             @include('layouts.navigation')
 
             <!-- Page Heading -->
@@ -31,6 +32,10 @@
             <main>
                 {{ $slot }}
             </main>
+
         </div>
+
+        <!-- 🔥 WAJIB: Alpine.js untuk dropdown, modal, hamburger menu -->
+        <script src="https://unpkg.com/alpinejs" defer></script>
     </body>
 </html>

@@ -48,8 +48,7 @@
            class="text-yellow-500 border-b-2 border-yellow-500 pb-2 font-semibold">
             Riwayat Transaksi
         </a>
-        <a href="{{ route('admin.history.booking') }}" class="text-gray-600">Booking History</a>
-        <a href="{{ route('admin.lapangan.jadwal') }}" class="text-gray-600">Jadwal History</a>
+        <a href="{{ route('admin.lapangan.jadwal') }}" class="text-gray-600">Jadwal Lapangan</a>
     </div>
 
     {{-- CARD STATISTIC --}}

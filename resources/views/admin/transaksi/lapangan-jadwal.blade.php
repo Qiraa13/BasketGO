@@ -47,9 +47,8 @@
     {{-- TAB --}}
     <div class="flex gap-6 border-b pb-2 mb-4">
         <a href="{{ route('admin.transaksi') }}" class="text-gray-600">Riwayat Transaksi</a>
-        <a href="{{ route('admin.history.booking') }}" class="text-gray-600">Booking History</a>
         <a href="{{ route('admin.lapangan.jadwal') }}" class="text-yellow-500 border-b-2 border-yellow-500 pb-2">
-            Jadwal History
+            Jadwal Lapangan
         </a>
     </div>
 

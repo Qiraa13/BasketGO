@@ -10,6 +10,13 @@
 
 <body class="bg-gray-100">
 
+@if(Auth::check() && is_null(auth()->user()->email_verified_at))
+    <script>
+        window.location.href = "/email/verify";
+    </script>
+@endif
+
+
 <div class="h-screen flex overflow-hidden">
 
     <!-- ✅ KIRI (Gambar Besar) -->

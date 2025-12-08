@@ -10,15 +10,14 @@ use Illuminate\Http\Request;
 class AdminHistoryController extends Controller
 {
     public function booking()
-    {
-        $lapangan = Booking::with(['lapangan', 'user', 'jadwal'])
-            ->orderBy('id')
-            ->get();
+{
+    $bookings = Booking::with(['lapangan', 'user', 'jadwal'])
+        ->orderBy('id', 'desc')
+        ->get();
 
-        return view('admin.transaksi.booking-history', [
-            'lapangan' => $lapangan
-        ]);
-    }
+    return view('admin.transaksi.booking-history', compact('bookings'));
+}
+
 
     public function jadwal()
     {

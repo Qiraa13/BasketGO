@@ -11,6 +11,21 @@ use App\Http\Controllers\HistoryController;
 use App\Http\Controllers\AdminTransaksiController;
 use App\Http\Controllers\AdminHistoryController;
 use App\Http\Controllers\AdminLapanganController;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
+
+Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
+
+    // Verifikasi email
+    $request->fulfill();
+
+    // AUTO LOGIN
+    Auth::login($request->user());
+
+    // Redirect langsung ke dashboard user
+    return redirect('/dashboard');
+
+})->middleware(['web', 'signed', 'throttle:6,1'])->name('verification.verify');
 
 // =========================
 // ROOT / LANDING
