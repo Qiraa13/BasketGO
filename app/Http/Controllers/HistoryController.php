@@ -13,10 +13,11 @@ class HistoryController extends Controller
         // TAB: status / history
         $tab = $request->get('tab', 'status'); // default: status
 
-        // ambil booking milik user
+        // Ambil booking milik user
         $bookings = Booking::where('user_id', Auth::id())
-            ->with(['lapangan', 'jadwal'])
-            ->orderBy('created_at', 'desc')
+            ->with('lapangan')
+            ->orderBy('tanggal', 'desc')
+            ->orderBy('jam', 'asc')
             ->get();
 
         return view('user.history', compact('tab', 'bookings'));

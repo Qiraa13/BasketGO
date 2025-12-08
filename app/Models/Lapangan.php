@@ -13,7 +13,7 @@ class Lapangan extends Model
 
     protected $fillable = [
         'nama',
-        'lokasi',
+        'jenis',          // <--- tidak ada 'lokasi' lagi
         'harga_per_jam',
     ];
 

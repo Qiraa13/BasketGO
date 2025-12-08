@@ -49,7 +49,7 @@
             Riwayat Transaksi
         </a>
         <a href="{{ route('admin.history.booking') }}" class="text-gray-600">Booking History</a>
-        <a href="{{ route('admin.lapangan.jadwal') }}" class="text-gray-600">Jadwal History</a>
+        <a href="{{ route('admin.lapangan') }}" class="text-gray-600">Lapangan</a>
     </div>
 
     {{-- CARD STATISTIC --}}

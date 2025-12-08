@@ -55,7 +55,7 @@
        Booking History
     </a>
 
-    <a href="{{ route('admin.lapangan.jadwal') }}" 
+    <a href="{{ route('admin.lapangan') }}" 
        class="text-gray-600">
        Jadwal History
     </a>

@@ -12,11 +12,12 @@ class Pembayaran extends Model
     protected $table = 'pembayaran';
 
     protected $fillable = [
-        'booking_id',
-        'metode',
-        'jumlah',
-        'status'
-    ];
+    'booking_id',
+    'metode',
+    'jumlah',
+    'status',
+    'bukti_transfer'
+];
 
     public function booking()
     {

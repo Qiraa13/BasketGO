@@ -2,43 +2,35 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Booking;
 use App\Models\Jadwal;
 use App\Models\Lapangan;
+use App\Models\Booking;
 use Illuminate\Http\Request;
 
 class AdminHistoryController extends Controller
 {
+    // BOOKING HISTORY
     public function booking()
     {
-        $lapangan = Booking::with(['lapangan', 'user', 'jadwal'])
+        $booking = Booking::with(['lapangan', 'user', 'jadwal'])
             ->orderBy('id')
             ->get();
 
-        return view('admin.transaksi.booking-history', [
-            'lapangan' => $lapangan
-        ]);
+        return view('admin.transaksi.booking-history', compact('booking'));
     }
 
+    // HALAMAN LAPANGAN + JADWAL (1 HALAMAN)
     public function jadwal()
     {
-        $jadwal = Jadwal::with('lapangan')
-            ->orderBy('tanggal', 'desc')
-            ->get();
-
-        return view('admin.transaksi.lapangan-jadwal', [
-            'jadwal' => $jadwal
+        return view('admin.transaksi.lapangan', [
+            'lapangans' => Lapangan::orderBy('id')->get(),
+            'jadwal' => Jadwal::with('lapangan')
+                            ->orderBy('tanggal', 'desc')
+                            ->get()
         ]);
     }
 
-    public function createJadwal()
-    {
-        $lapangans = Lapangan::all();
-        return view('admin.transaksi.lapangan-jadwal-create', [
-            'lapangans' => $lapangans
-        ]);
-    }
-
+    // STORE JADWAL
     public function storeJadwal(Request $request)
     {
         $validated = $request->validate([
@@ -50,17 +42,15 @@ class AdminHistoryController extends Controller
 
         Jadwal::create($validated);
 
-        return redirect()->route('admin.lapangan.jadwal')
+        return redirect()->route('admin.lapangan')
             ->with('success', 'Jadwal berhasil ditambahkan.');
     }
 
     public function editJadwal(Jadwal $jadwal)
     {
-        $lapangans = Lapangan::all();
-        
-        return view('admin.transaksi.lapangan-jadwal-edit', [
+        return view('admin.transaksi.jadwal-edit', [
             'jadwal' => $jadwal,
-            'lapangans' => $lapangans
+            'lapangans' => Lapangan::all()
         ]);
     }
 
@@ -75,7 +65,7 @@ class AdminHistoryController extends Controller
 
         $jadwal->update($validated);
 
-        return redirect()->route('admin.lapangan.jadwal')
+        return redirect()->route('admin.lapangan')
             ->with('success', 'Jadwal berhasil diperbarui.');
     }
 
@@ -83,7 +73,7 @@ class AdminHistoryController extends Controller
     {
         $jadwal->delete();
 
-        return redirect()->route('admin.lapangan.jadwal')
+        return redirect()->route('admin.lapangan')
             ->with('success', 'Jadwal berhasil dihapus.');
     }
 }

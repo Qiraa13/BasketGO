@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Booking;
 use App\Models\Pembayaran;
-use App\Models\Jadwal;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -19,38 +18,42 @@ class HomeController extends Controller
             return view('admin.dashboard');
         }
 
-        // 🍀 Total booking user
+        // =============================
+        // 1. TOTAL BOOKING USER
+        // =============================
         $totalBookings = Booking::where('user_id', $user->id)->count();
 
-        // 🍀 Upcoming booking (diurutkan berdasarkan tanggal jadwal — PostgreSQL SAFE)
-        $upcomingBookings = Booking::with(['lapangan', 'jadwal'])
+        // =============================
+        // 2. UPCOMING BOOKING (TANPA jadwal_id)
+        // =============================
+        $upcomingBookings = Booking::with('lapangan')
             ->where('user_id', $user->id)
-            ->whereHas('jadwal', function ($q) {
-                $q->where('tanggal', '>=', now()->toDateString());
-            })
-            ->orderBy(
-                Jadwal::select('tanggal')
-                    ->whereColumn('jadwal.id', 'booking.jadwal_id')
-                    ->limit(1)
-            )
+            ->where('tanggal', '>=', now()->toDateString())
+            ->orderBy('tanggal', 'asc')
             ->take(3)
             ->get();
 
-        // 🍀 Pembayaran pending user
+        // =============================
+        // 3. PEMBAYARAN PENDING
+        // =============================
         $pendingPayment = Pembayaran::whereHas('booking', function ($q) use ($user) {
                 $q->where('user_id', $user->id);
             })
             ->where('status', 'belum_bayar')
             ->count();
 
-        // 🍀 Total pengeluaran user
+        // =============================
+        // 4. TOTAL PENGELUARAN USER
+        // =============================
         $totalSpent = Pembayaran::whereHas('booking', function ($q) use ($user) {
                 $q->where('user_id', $user->id);
             })
             ->where('status', 'lunas')
             ->sum('jumlah');
 
-        // 🔥 Kirim ke dashboard user
+        // =============================
+        // RETURN TO USER DASHBOARD
+        // =============================
         return view('user.dashboard', [
             'totalBookings'   => $totalBookings,
             'upcomingBookings'=> $upcomingBookings,
