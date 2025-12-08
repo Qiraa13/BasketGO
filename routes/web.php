@@ -39,6 +39,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // USER HISTORY
     Route::get('/history', [HistoryController::class, 'index'])
         ->name('history.index');
+
 });
 
 
