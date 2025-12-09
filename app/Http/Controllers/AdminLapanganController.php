@@ -17,9 +17,7 @@ class AdminLapanganController extends Controller
 
         Lapangan::create($validated);
 
-        return redirect()
-            ->route('admin.lapangan')
-            ->with('success', 'Lapangan berhasil ditambahkan.');
+        return back()->with('success', 'Lapangan berhasil ditambahkan.');
     }
 
     public function update(Request $request, Lapangan $lapangan)
@@ -32,17 +30,13 @@ class AdminLapanganController extends Controller
 
         $lapangan->update($validated);
 
-        return redirect()
-            ->route('admin.lapangan')
-            ->with('success', 'Lapangan berhasil diperbarui.');
+        return back()->with('success', 'Lapangan berhasil diperbarui.');
     }
 
     public function destroy(Lapangan $lapangan)
     {
         $lapangan->delete();
 
-        return redirect()
-            ->route('admin.lapangan')
-            ->with('success', 'Lapangan berhasil dihapus.');
+        return back()->with('success', 'Lapangan berhasil dihapus.');
     }
 }

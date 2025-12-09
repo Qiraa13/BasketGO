@@ -2,81 +2,50 @@
 
 @section('content')
 
-
-
 <div class="bg-white rounded-xl shadow p-6">
+
+    {{-- HEADER --}}
     <div class="flex items-center justify-between mb-6">
 
-    {{-- LEFT --}}
-    <h1 class="text-2xl font-bold text-gray-800">Admin Verifikasi Booking</h1>
+        <h1 class="text-2xl font-bold text-gray-800">Admin Verifikasi Booking</h1>
 
-    {{-- RIGHT --}}
-    <div class="flex items-center gap-4">
+        <div class="flex items-center gap-4">
 
-        {{-- Search --}}
-        <input type="text"
-               placeholder="Cari pemesanan..."
-               class="border border-gray-300 rounded-lg px-4 py-2 text-sm w-56
-                      focus:ring-orange-400 focus:border-orange-400">
+            <input type="text"
+                placeholder="Cari booking..."
+                class="border border-gray-300 rounded-lg px-4 py-2 text-sm w-56">
 
-        {{-- Status Dropdown --}}
-        <div class="relative">
-            <select
-                class="border border-gray-300 rounded-lg px-4 py-2 pr-8 text-sm appearance-none
-                       focus:ring-orange-400 focus:border-orange-400">
-                <option>Semua Status</option>
-                <option>Dikonfirmasi</option>
-                <option>Pending</option>
-                <option>Ditolak</option>
-            </select>
+            <button class="text-2xl hover:text-yellow-500">🔔</button>
 
-            <!-- Custom arrow biar rapi -->
-            <span class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-600 pointer-events-none">
-                ▼
-            </span>
+            <img src="https://ui-avatars.com/api/?name=Admin"
+                class="w-10 h-10 rounded-full border shadow-sm">
         </div>
 
-        {{-- Notifikasi --}}
-        <button class="text-2xl hover:text-orange-500">🔔</button>
-
-        {{-- Avatar --}}
-        <img src="https://ui-avatars.com/api/?name=Admin"
-             class="w-10 h-10 rounded-full border border-gray-300 shadow-sm">
     </div>
 
-</div>
-
-
-    <!-- STATUS CARD -->
+    {{-- STATISTICS --}}
     <div class="grid grid-cols-3 gap-6 mb-6">
 
         <div class="bg-yellow-100 p-4 rounded-lg">
-            <p class="text-gray-600">Total Booking Pending</p>
-            <h3 class="text-3xl font-bold text-yellow-600">0</h3>
+            <p class="text-gray-600">Total Pending</p>
+            <h3 class="text-3xl font-bold text-yellow-600">{{ $pending }}</h3>
         </div>
 
         <div class="bg-green-100 p-4 rounded-lg">
-            <p class="text-gray-600">Booking Dikonfirmasi</p>
-            <h3 class="text-3xl font-bold text-green-600">0</h3>
+            <p class="text-gray-600">Dikonfirmasi</p>
+            <h3 class="text-3xl font-bold text-green-600">{{ $confirmed }}</h3>
         </div>
 
         <div class="bg-red-100 p-4 rounded-lg">
-            <p class="text-gray-600">Booking Ditolak</p>
-            <h3 class="text-3xl font-bold text-red-600">0</h3>
+            <p class="text-gray-600">Ditolak</p>
+            <h3 class="text-3xl font-bold text-red-600">{{ $rejected }}</h3>
         </div>
 
     </div>
 
-    <!-- FILTER -->
-    <div class="flex gap-3 mb-4">
-        <button class="px-4 py-2 bg-gray-200 rounded">Semua Status</button>
-        <input type="text" placeholder="Cari nama penyewa atau ID..."
-               class="border px-4 py-2 rounded w-64">
-        <button class="px-4 py-2 bg-yellow-400 text-white rounded">Cari</button>
-    </div>
-
-    <!-- TABEL -->
+    {{-- TABEL BOOKING --}}
     <table class="w-full border-collapse">
+
         <thead>
             <tr class="bg-yellow-400 text-white text-left">
                 <th class="p-3">ID Booking</th>
@@ -84,22 +53,80 @@
                 <th class="p-3">Lapangan</th>
                 <th class="p-3">Tanggal</th>
                 <th class="p-3">Jam</th>
+                <th class="p-3">Bukti Transfer</th>
                 <th class="p-3">Status</th>
                 <th class="p-3">Aksi</th>
             </tr>
         </thead>
 
         <tbody>
+
+            @forelse($bookings as $b)
             <tr class="border-b">
-                <td class="p-3">BK001</td>
-                <td class="p-3">Budi Santoso</td>
-                <td class="p-3">Lapangan A</td>
-                <td class="p-3">2024-11-15</td>
-                <td class="p-3">08:00 - 09:00</td>
-                <td class="p-3"><span class="px-3 py-1 bg-yellow-300 text-white rounded">Pending</span></td>
-                <td class="p-3"><button class="px-3 py-1 bg-blue-500 text-white rounded">Detail</button></td>
+
+                <td class="p-3">BK{{ str_pad($b->id, 3, '0', STR_PAD_LEFT) }}</td>
+
+                <td class="p-3">{{ $b->user->name }}</td>
+
+                <td class="p-3">{{ $b->lapangan->nama }}</td>
+
+                <td class="p-3">{{ $b->tanggal }}</td>
+
+                <td class="p-3">{{ $b->jam }}</td>
+
+                <td class="p-3">
+                    @if($b->pembayaran && $b->pembayaran->bukti_transfer)
+                        <a href="{{ asset('storage/'.$b->pembayaran->bukti_transfer) }}"
+                           target="_blank"
+                           class="text-blue-600 underline">
+                            Lihat Bukti
+                        </a>
+                    @else
+                        <span class="text-gray-400">Tidak ada</span>
+                    @endif
+                </td>
+
+                <td class="p-3">
+                    @if($b->status == 'pending')
+                        <span class="px-3 py-1 bg-yellow-300 text-white rounded">Pending</span>
+                    @elseif($b->status == 'diterima')
+                        <span class="px-3 py-1 bg-green-600 text-white rounded">Diterima</span>
+                    @else
+                        <span class="px-3 py-1 bg-red-600 text-white rounded">Ditolak</span>
+                    @endif
+                </td>
+
+                <td class="p-3 flex gap-2">
+
+                    {{-- Terima --}}
+                    <form method="POST" action="{{ route('admin.booking.confirm', $b->id) }}">
+                        @csrf @method('PUT')
+                        <button class="px-3 py-1 bg-green-600 text-white rounded text-sm">
+                            Terima
+                        </button>
+                    </form>
+
+                    {{-- Tolak --}}
+                    <form method="POST" action="{{ route('admin.booking.reject', $b->id) }}">
+                        @csrf @method('PUT')
+                        <button class="px-3 py-1 bg-red-600 text-white rounded text-sm">
+                            Tolak
+                        </button>
+                    </form>
+
+                </td>
+
             </tr>
+            @empty
+                <tr>
+                    <td colspan="8" class="text-center py-4 text-gray-500">
+                        Belum ada booking
+                    </td>
+                </tr>
+            @endforelse
+
         </tbody>
+
     </table>
 
 </div>

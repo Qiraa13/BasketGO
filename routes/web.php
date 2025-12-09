@@ -12,11 +12,14 @@ use App\Http\Controllers\HistoryController;
 use App\Http\Controllers\AdminTransaksiController;
 use App\Http\Controllers\AdminHistoryController;
 use App\Http\Controllers\AdminLapanganController;
+use App\Http\Controllers\AdminBookingController; // untuk verifikasi booking
 
 
-// =====================================================================
-// ROOT / LANDING
-// =====================================================================
+/*
+|--------------------------------------------------------------------------
+| LANDING
+|--------------------------------------------------------------------------
+*/
 Route::get('/', function () {
     if (auth()->check()) {
         return redirect()->route('dashboard');
@@ -25,87 +28,109 @@ Route::get('/', function () {
 })->name('landing');
 
 
-// =====================================================================
-// USER (LOGIN REQUIRED)
-// =====================================================================
-Route::middleware(['auth', 'verified'])->group(function () {
+/*
+|--------------------------------------------------------------------------
+| USER (AUTH + VERIFIED)
+|--------------------------------------------------------------------------
+*/
+Route::middleware(['auth','verified'])->group(function () {
 
-    // Dashboard User
     Route::get('/dashboard', [HomeController::class, 'index'])
         ->name('dashboard');
 
-    // Booking Page
+    // Booking Lapangan (User)
     Route::get('/booking', [BookingController::class, 'index'])
         ->name('booking.index');
 
-    // AJAX Filter Lapangan
     Route::get('/booking/filter', [BookingController::class, 'filterByJenis'])
         ->name('booking.filter');
 
-    // Create Booking + Upload Bukti Transfer
     Route::post('/booking/store', [BookingController::class, 'store'])
         ->name('booking.store');
 
-    // User History
+    // Riwayat Booking User
     Route::get('/history', [HistoryController::class, 'index'])
         ->name('history.index');
 });
 
 
-// =====================================================================
-// USER ACCOUNT
-// =====================================================================
+/*
+|--------------------------------------------------------------------------
+| USER ACCOUNT
+|--------------------------------------------------------------------------
+*/
 Route::delete('/delete-account', [UserAccountController::class, 'destroy'])
     ->name('account.delete');
 
 
-// =====================================================================
-// ADMIN PANEL
-// =====================================================================
-Route::middleware(['auth', 'role:admin'])
+/*
+|--------------------------------------------------------------------------
+| ADMIN PANEL
+|--------------------------------------------------------------------------
+*/
+Route::middleware(['auth','role:admin'])
     ->prefix('admin')
     ->group(function () {
 
     // Dashboard Admin
-    Route::get('/dashboard', fn () => view('admin.dashboard'))
+    Route::get('/dashboard', fn() => view('admin.dashboard'))
         ->name('admin.dashboard');
 
-    // Transaksi Admin
+
+    /*
+    |--------------------------------------------------------------------------
+    | ADMIN VERIFIKASI BOOKING (Book Court)
+    |--------------------------------------------------------------------------
+    */
+    Route::get('/book-court', [AdminBookingController::class, 'index'])
+        ->name('admin.bookcourt');
+
+    Route::put('/booking/{booking}/confirm', [AdminBookingController::class, 'confirm'])
+        ->name('admin.booking.confirm');
+
+    Route::put('/booking/{booking}/reject', [AdminBookingController::class, 'reject'])
+        ->name('admin.booking.reject');
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | RIWAYAT TRANSAKSI (Admin)
+    |--------------------------------------------------------------------------
+    */
     Route::get('/transaksi', [AdminTransaksiController::class, 'index'])
         ->name('admin.transaksi');
 
-    // Booking History Admin
-    Route::get('/booking-history', [AdminHistoryController::class, 'booking'])
-        ->name('admin.history.booking');
-
-    // LAPANGAN PAGE (LAPANGAN + JADWAL)
-    Route::get('/lapangan', [AdminHistoryController::class, 'jadwal'])
+    /*
+    |--------------------------------------------------------------------------
+    | LAPANGAN & JADWAL
+    |--------------------------------------------------------------------------
+    */
+    Route::get('/lapangan', [AdminHistoryController::class,'jadwal'])
         ->name('admin.lapangan');
 
-    // CRUD LAPANGAN
-    Route::post('/lapangan/store', [AdminLapanganController::class, 'store'])
+    Route::post('/lapangan/store', [AdminLapanganController::class,'store'])
         ->name('admin.lapangan.store');
 
-    Route::put('/lapangan/{lapangan}', [AdminLapanganController::class, 'update'])
+    Route::put('/lapangan/{lapangan}', [AdminLapanganController::class,'update'])
         ->name('admin.lapangan.update');
 
-    Route::delete('/lapangan/{lapangan}', [AdminLapanganController::class, 'destroy'])
+    Route::delete('/lapangan/{lapangan}', [AdminLapanganController::class,'destroy'])
         ->name('admin.lapangan.destroy');
 
-    // CRUD JADWAL
-    Route::post('/lapangan/jadwal', [AdminHistoryController::class, 'storeJadwal'])
+    // CRUD Jadwal
+    Route::post('/lapangan/jadwal', [AdminHistoryController::class,'storeJadwal'])
         ->name('admin.lapangan.jadwal.store');
 
-    Route::get('/lapangan/jadwal/{jadwal}/edit', [AdminHistoryController::class, 'editJadwal'])
+    Route::get('/lapangan/jadwal/{jadwal}/edit', [AdminHistoryController::class,'editJadwal'])
         ->name('admin.lapangan.jadwal.edit');
 
-    Route::put('/lapangan/jadwal/{jadwal}', [AdminHistoryController::class, 'updateJadwal'])
+    Route::put('/lapangan/jadwal/{jadwal}', [AdminHistoryController::class,'updateJadwal'])
         ->name('admin.lapangan.jadwal.update');
 
-    Route::delete('/lapangan/jadwal/{jadwal}', [AdminHistoryController::class, 'destroyJadwal'])
+    Route::delete('/lapangan/jadwal/{jadwal}', [AdminHistoryController::class,'destroyJadwal'])
         ->name('admin.lapangan.jadwal.destroy');
 });
 
 
-// AUTH ROUTES (Laravel Breeze/Fortify)
+// Default Auth Routes
 require __DIR__.'/auth.php';

@@ -46,10 +46,7 @@
             Riwayat Transaksi
         </a>
 
-        <a href="{{ route('admin.history.booking') }}" class="text-gray-600">
-            Booking History
-        </a>
-
+        
         <a href="{{ route('admin.lapangan') }}"
            class="text-yellow-500 font-semibold border-b-2 border-yellow-500 pb-2">
             Lapangan

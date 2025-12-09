@@ -1,7 +1,5 @@
 <?php
 
-// database/migrations/2025_09_15_000004_create_pembayaran_table.php
-
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -10,10 +8,14 @@ return new class extends Migration {
     public function up(): void {
         Schema::create('pembayaran', function (Blueprint $table) {
             $table->id();
+
             $table->foreignId('booking_id')->constrained('booking')->onDelete('cascade');
-            $table->string('metode'); // misal: transfer, cash
+            $table->string('metode');
             $table->integer('jumlah');
-            $table->enum('status', ['belum_bayar', 'lunas', 'gagal'])->default('belum_bayar');
+
+            $table->enum('status', ['belum_bayar','lunas','gagal'])->default('belum_bayar');
+            $table->string('bukti_transfer')->nullable();
+
             $table->timestamps();
         });
     }
@@ -22,4 +24,3 @@ return new class extends Migration {
         Schema::dropIfExists('pembayaran');
     }
 };
-

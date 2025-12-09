@@ -1,7 +1,5 @@
 <?php
 
-// database/migrations/2025_09_15_000001_create_lapangan_table.php
-
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -11,7 +9,7 @@ return new class extends Migration {
         Schema::create('lapangan', function (Blueprint $table) {
             $table->id();
             $table->string('nama');
-            $table->string('jenis');
+            $table->string('jenis'); 
             $table->integer('harga_per_jam');
             $table->timestamps();
         });
@@ -21,4 +19,3 @@ return new class extends Migration {
         Schema::dropIfExists('lapangan');
     }
 };
-

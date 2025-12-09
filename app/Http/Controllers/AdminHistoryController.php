@@ -9,16 +9,6 @@ use Illuminate\Http\Request;
 
 class AdminHistoryController extends Controller
 {
-    // BOOKING HISTORY
-    public function booking()
-    {
-        $booking = Booking::with(['lapangan', 'user', 'jadwal'])
-            ->orderBy('id')
-            ->get();
-
-        return view('admin.transaksi.booking-history', compact('booking'));
-    }
-
     // HALAMAN LAPANGAN + JADWAL (1 HALAMAN)
     public function jadwal()
     {
