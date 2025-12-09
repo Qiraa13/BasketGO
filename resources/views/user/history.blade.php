@@ -55,7 +55,10 @@
     </div>
 
 
-    {{-- ============= TAB STATUS ============= --}}
+
+    {{-- ========================= --}}
+    {{-- ========== STATUS ========= --}}
+    {{-- ========================= --}}
     @if($tab == 'status')
 
         @if($bookings->isEmpty())
@@ -72,7 +75,6 @@
                     @endif">
 
                     <div class="flex justify-between mb-3">
-                        {{-- STATUS BADGE --}}
                         <span class="text-xs font-semibold px-3 py-1 rounded-full
                             @if($b->status=='pending') bg-yellow-100 text-yellow-600
                             @elseif($b->status=='diterima') bg-green-100 text-green-600
@@ -84,16 +86,13 @@
                         <span class="text-xs text-gray-400">#BK{{ $b->id }}</span>
                     </div>
 
-                    {{-- LAPANGAN --}}
                     <h3 class="font-semibold text-gray-800 mb-1">
                         {{ $b->lapangan->nama ?? '-' }}
                     </h3>
 
-                    {{-- JADWAL (DATABASE BERDASARKAN BOOKING LANGSUNG, BUKAN TABEL JADWAL) --}}
                     <p class="text-sm text-gray-500">📅 {{ $b->tanggal }}</p>
                     <p class="text-sm text-gray-500 mb-3">⏰ {{ $b->jam }}</p>
 
-                    {{-- HARGA --}}
                     <p class="text-sm font-semibold text-orange-600">
                         IDR {{ number_format($b->lapangan->harga_per_jam ?? 0, 0, ',', '.') }}
                     </p>
@@ -109,7 +108,9 @@
 
 
 
-    {{-- ============= TAB HISTORY ============= --}}
+    {{-- =============================== --}}
+    {{-- ========== HISTORY TABLE ======= --}}
+    {{-- =============================== --}}
     @if($tab == 'history')
 
         @php
@@ -121,36 +122,56 @@
 
         @else
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="bg-white p-6 rounded-lg shadow overflow-x-auto">
 
-                @foreach($history as $b)
-                <div class="bg-white rounded-xl shadow-sm border p-5">
+            <table class="w-full text-sm border border-gray-200 rounded-lg overflow-hidden">
 
-                    <div class="flex justify-between mb-3">
-                        <span class="text-xs font-semibold px-3 py-1 rounded-full
-                            @if($b->status=='diterima') bg-green-100 text-green-600
-                            @else bg-red-100 text-red-600 @endif">
-                            {{ strtoupper($b->status) }}
-                        </span>
+                <thead class="bg-orange-500 text-white">
+                    <tr>
+                        <th class="py-3 px-4 text-left">ID Booking</th>
+                        <th class="py-3 px-4 text-left">Lapangan</th>
+                        <th class="py-3 px-4 text-left">Tanggal</th>
+                        <th class="py-3 px-4 text-left">Jam</th>
+                        <th class="py-3 px-4 text-left">Harga</th>
+                        <th class="py-3 px-4 text-left">Status</th>
+                    </tr>
+                </thead>
 
-                        <span class="text-xs text-gray-400">#BK{{ $b->id }}</span>
-                    </div>
+                <tbody>
+                    @foreach($history as $b)
+                    <tr class="border-b">
 
-                    <h3 class="font-semibold text-gray-800 mb-1">
-                        {{ $b->lapangan->nama ?? '-' }}
-                    </h3>
+                        <td class="py-3 px-4">BK{{ str_pad($b->id, 3, '0', STR_PAD_LEFT) }}</td>
 
-                    <p class="text-sm text-gray-500">📅 {{ $b->tanggal }}</p>
-                    <p class="text-sm text-gray-500 mb-3">⏰ {{ $b->jam }}</p>
+                        <td class="py-3 px-4">{{ $b->lapangan->nama }}</td>
 
-                    <p class="text-sm font-semibold text-orange-600">
-                        IDR {{ number_format($b->lapangan->harga_per_jam ?? 0, 0, ',', '.') }}
-                    </p>
+                        <td class="py-3 px-4">{{ $b->tanggal }}</td>
 
-                </div>
-                @endforeach
+                        <td class="py-3 px-4">{{ $b->jam }}</td>
 
-            </div>
+                        <td class="py-3 px-4">
+                            IDR {{ number_format($b->lapangan->harga_per_jam, 0, ',', '.') }}
+                        </td>
+
+                        <td class="py-3 px-4">
+                            @if($b->status == 'diterima')
+                                <span class="px-3 py-1 text-xs bg-green-600 text-white rounded-full">
+                                    DITERIMA
+                                </span>
+                            @else
+                                <span class="px-3 py-1 text-xs bg-red-600 text-white rounded-full">
+                                    DITOLAK
+                                </span>
+                            @endif
+                        </td>
+
+                    </tr>
+                    @endforeach
+                </tbody>
+
+            </table>
+
+        </div>
 
         @endif
 
