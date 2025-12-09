@@ -17,7 +17,7 @@
                 class="border border-gray-300 rounded-lg px-4 py-2 text-sm w-56
                        focus:ring-yellow-400 focus:border-yellow-400">
 
-            {{-- Dropdown agar UI sama --}}
+            {{-- Dropdown --}}
             <div class="relative">
                 <select
                     class="border border-gray-300 rounded-lg px-4 py-2 pr-8 text-sm appearance-none
@@ -46,7 +46,6 @@
             Riwayat Transaksi
         </a>
 
-        
         <a href="{{ route('admin.lapangan') }}"
            class="text-yellow-500 font-semibold border-b-2 border-yellow-500 pb-2">
             Lapangan
@@ -113,9 +112,9 @@
 
 </div>
 
-{{-- ========================= --}}
+{{-- ====================================================== --}}
 {{-- MODAL TAMBAH LAPANGAN --}}
-{{-- ========================= --}}
+{{-- ====================================================== --}}
 <div id="modalTambahLapangan"
     class="fixed inset-0 bg-black bg-opacity-50 hidden justify-center items-center z-50">
 
@@ -128,7 +127,8 @@
 
             <div>
                 <label class="font-semibold">Nama Lapangan</label>
-                <input type="text" name="nama" class="border rounded-lg w-full px-3 py-2" required>
+                <input type="text" name="nama"
+                       class="border rounded-lg w-full px-3 py-2" required>
             </div>
 
             <div>
@@ -161,6 +161,60 @@
     </div>
 </div>
 
+{{-- ====================================================== --}}
+{{-- MODAL EDIT LAPANGAN (NEW) --}}
+{{-- ====================================================== --}}
+<div id="modalEditLapangan"
+    class="fixed inset-0 bg-black bg-opacity-50 hidden justify-center items-center z-50">
+
+    <div class="bg-white w-96 p-6 rounded-xl space-y-4">
+
+        <h2 class="text-xl font-bold text-center">Edit Lapangan</h2>
+
+        <form id="editLapanganForm" method="POST">
+            @csrf
+            @method('PUT')
+
+            <div>
+                <label class="font-semibold">Nama Lapangan</label>
+                <input type="text" id="edit_nama" name="nama"
+                       class="border rounded-lg w-full px-3 py-2" required>
+            </div>
+
+            <div>
+                <label class="font-semibold">Jenis</label>
+                <select id="edit_jenis" name="jenis"
+                        class="border rounded-lg w-full px-3 py-2" required>
+                    <option value="Premium">Premium</option>
+                    <option value="Indoor">Indoor</option>
+                    <option value="Outdoor">Outdoor</option>
+                </select>
+            </div>
+
+            <div>
+                <label class="font-semibold">Harga per Jam</label>
+                <input type="number" id="edit_harga" name="harga_per_jam"
+                       class="border rounded-lg w-full px-3 py-2" required>
+            </div>
+
+            <button class="bg-blue-600 text-white w-full py-2 rounded-lg mt-3">
+                Update
+            </button>
+
+            <button type="button"
+                    onclick="closeEditModal()"
+                    class="bg-gray-300 w-full py-2 rounded-lg mt-2">
+                Batal
+            </button>
+
+        </form>
+
+    </div>
+</div>
+
+{{-- ====================================================== --}}
+{{-- JAVASCRIPT --}}
+{{-- ====================================================== --}}
 <script>
 function openLapanganModal() {
     document.getElementById("modalTambahLapangan").classList.remove("hidden");
@@ -169,6 +223,24 @@ function openLapanganModal() {
 
 function closeLapanganModal() {
     document.getElementById("modalTambahLapangan").classList.add("hidden");
+}
+
+function openEditModal(data) {
+    document.getElementById("modalEditLapangan").classList.remove("hidden");
+    document.getElementById("modalEditLapangan").classList.add("flex");
+
+    // Isi input otomatis
+    document.getElementById("edit_nama").value = data.nama;
+    document.getElementById("edit_jenis").value = data.jenis;
+    document.getElementById("edit_harga").value = data.harga_per_jam;
+
+    // Set action form edit
+    document.getElementById("editLapanganForm").action =
+        "/admin/lapangan/" + data.id;
+}
+
+function closeEditModal() {
+    document.getElementById("modalEditLapangan").classList.add("hidden");
 }
 </script>
 
